@@ -8,6 +8,7 @@ public class ObjFollowMouse : MonoBehaviour
     public bool isChosen;
     public Node nodeITook;
     public Vector3 initPos;
+    public Vector3 targetMovementPos;
     void Start()
     {
         placeObjectOnGrid = FindObjectOfType<PlaceObjectOnGrid>();
@@ -22,7 +23,12 @@ public class ObjFollowMouse : MonoBehaviour
         else
         {
             initPos = transform.position;
-        }
 
+        }
+    }
+
+    public void UpdateTargetPosition()
+    {
+        targetMovementPos = transform.position + transform.forward;
     }
 }

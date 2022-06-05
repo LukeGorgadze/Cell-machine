@@ -330,6 +330,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isChosen: 0
   initPos: {x: 0, y: 0, z: 0}
+  targetMovementPos: {x: 0, y: 0, z: 0}
 --- !u!54 &95519344
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1300,6 +1301,8 @@ GameObject:
   - component: {fileID: 1022272107}
   - component: {fileID: 1022272110}
   - component: {fileID: 1022272111}
+  - component: {fileID: 1022272112}
+  - component: {fileID: 1022272113}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -1314,14 +1317,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1022272105}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.5, z: 4.94}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 725229720}
   m_Father: {fileID: 178850075}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!65 &1022272107
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1331,7 +1334,7 @@ BoxCollider:
   m_GameObject: {fileID: 1022272105}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -1398,6 +1401,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isChosen: 0
   initPos: {x: 0, y: 0, z: 0}
+  targetMovementPos: {x: 0, y: 0, z: 0}
 --- !u!54 &1022272111
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1414,6 +1418,36 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &1022272112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1022272105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd69a6a2dc7c37d4eb241780b277a7f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stepSize: 1
+  speed: 5
+  rb: {fileID: 1022272111}
+  walk: 0
+  obf: {fileID: 1022272110}
+--- !u!135 &1022272113
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1022272105}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5000001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &1079270035 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 124368139979685516, guid: e4a7a65eff2260b4ab6dc0ce21b17f4d, type: 3}

@@ -49,6 +49,7 @@ public class PlaceObjectOnGrid : MonoBehaviour
                         currentDraggableObject.nodeITook = node;
                         currentDraggableObject.isChosen = false;
                         currentDraggableObject.transform.position = node.cellPosition + new Vector3(0, 0.5f, 0);
+                        currentDraggableObject.UpdateTargetPosition();
                     }
                 }
 
