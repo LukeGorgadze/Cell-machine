@@ -27,8 +27,8 @@ public class ObjFollowMouse : MonoBehaviour
         }
     }
 
-    public void UpdateTargetPosition()
+    public void UpdateTargetPosition(Vector3 dir)
     {
-        targetMovementPos = transform.position + transform.forward;
+        targetMovementPos = transform.position + dir;
     }
 }

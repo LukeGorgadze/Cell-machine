@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class RotateBox : Movers
 {
-    public override void TakeMySuperPower(Movers mover)
-    {
-        mover.RotateMeRight();
-        print("power granted");
-    }
+    // public override void TakeMySuperPower(Movers mover)
+    // {
+    //     mover.RotateMeRight();
+    //     print("power granted");
+    // }
     override protected void MyUpdate()
     {
-        //CheckTheFront();
+        CheckTheFront();
     }
 }

@@ -8,7 +8,7 @@ public class Player : Movers
         if (Input.GetKeyDown(KeyCode.Space))
             walk = true;
 
-        Move(transform.forward);
+        Move();
         CheckTheFront();
     }
    

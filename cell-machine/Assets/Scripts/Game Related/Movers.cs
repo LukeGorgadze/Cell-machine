@@ -3,111 +3,159 @@ using DG.Tweening;
 
 public class Movers : MonoBehaviour
 {
-    public string name;
+    public bool iAmStander;
+    public enum boxType
+    {
+        PLAYER,
+        ROTATION,
+        PAUSE,
+        EXPLODER,
+
+    }
+    public boxType MyType;
     public float stepSize = 1f;
     public float speed = 5f;
     public Rigidbody rb;
     public bool walk = true;
     public LayerMask layerMask;
+    public LayerMask EnemyLayer;
 
     //Local Vars
     public ObjFollowMouse obf;
-    bool moveIsComplete = true;
+    bool moveIsComplete = false;
     protected bool isMoving;
+    public Vector3 moveDirection;
+    bool inFront;
+    public float yAngle = 0;
+    Movers objToMove;
 
 
 
     protected virtual void OnEnable()
     {
         UpdateManager.onUpdate += MyUpdate;
-        //UpdateManager.onFixedUpdate += MyFixedUpdate;
     }
     protected virtual void OnDisable()
     {
         UpdateManager.onUpdate -= MyUpdate;
-        //UpdateManager.onFixedUpdate -= MyFixedUpdate;
     }
     protected virtual void Start()
     {
-
+        moveDirection = transform.forward;
     }
 
-    // Update is called once per frame
     protected virtual void MyUpdate()
     {
         if (Input.GetKeyDown(KeyCode.Space))
-            walk = true;
-
-        CheckTheFront();
-
-
-    }
-    //
-
-    public virtual void Move(Vector3 dir)
-    {
-        if (!walk || !moveIsComplete) { return; }
-        isMoving = true;
-        transform.DOMove(transform.position + dir, speed).OnComplete(AfterStep);
-        walk = false;
-        moveIsComplete = false;
-
-    }
-    public void RotateMeRight()
-    {
-        Quaternion currentRotation = transform.rotation;
-        Quaternion targetRotation = transform.rotation;
-
-        if (currentRotation == targetRotation)
         {
-            targetRotation *= Quaternion.Euler(90.0f, 0.0f, 0.0f);
+            walk = true;
+            if (!iAmStander)
+            {
+                Move();
+                moveIsComplete = true;
+            }
         }
 
-        float angle = transform.rotation.y;
-        Quaternion curRot = transform.rotation;
-        transform.rotation = targetRotation;
-        //transform.DORotate(new Vector3(0, 90, 0), 1, RotateMode.WorldAxisAdd);
-    }
 
-    protected virtual void AfterStep()
-    {
-        obf.UpdateTargetPosition();
-        moveIsComplete = true;
-        isMoving = false;
-    }
 
-    public virtual void TakeMySuperPower(Movers mover)
-    {
-
+        CheckTheFront();
+        checkEnemies();
     }
     public virtual void CheckTheFront()
     {
         RaycastHit hit;
-        Debug.DrawRay(transform.position, transform.forward * 10, Color.red);
-
-        bool inFront = Physics.Raycast(transform.position, transform.forward, out hit, .5f, layerMask);
+        Debug.DrawRay(transform.position, moveDirection * 1.2f, Color.red);
+        inFront = Physics.Raycast(transform.position, moveDirection, out hit, 1.2f, layerMask);
         if (inFront)
         {
-            Movers obj = hit.transform.GetComponent<Movers>();
-            obj.Move(transform.forward);
-            // switch (obj.name)
-            // {
-            //     case "rotateBox":
-            //         obj.TakeMySuperPower(this);
-            //         break;
-            //     default:
-                    
-            //         break;
-            // }
+            objToMove = hit.transform.GetComponent<Movers>();
+            if (objToMove.MyType != boxType.PLAYER)
+                objToMove.moveDirection = this.moveDirection;
+            switch (objToMove.MyType)
+            {
+                case boxType.ROTATION:
+                    if (MyType == boxType.PLAYER)
+                    {
+                        print("OEEEE");
+                        RotateMeRight();
+                        objToMove = null;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
-    /// <summary>
-    /// Callback to draw gizmos that are pickable and always drawn.
-    /// </summary>
+    public void Move()
+    {
+        if (!moveIsComplete || iAmStander || !walk) { return; }
+        isMoving = true;
+        if (inFront && objToMove != null)
+        {
+            transform.DOKill();
+            objToMove.MoveTo(transform.forward);
+            transform.DOMove(transform.position + transform.forward, speed).OnComplete(AfterStep);
+        }
+        else
+        {
+            transform.DOMove(transform.position + transform.forward, speed).OnComplete(AfterStep);
+        }
+        walk = false;
+        moveIsComplete = false;
+
+    }
+    void MoveTo(Vector3 dir)
+    {
+        if (!walk) { return; }
+        isMoving = true;
+        if (inFront && objToMove != null)
+        {
+            if (objToMove.MyType != boxType.PLAYER)
+            {
+                objToMove.moveDirection = this.moveDirection;
+                objToMove.MoveTo(moveDirection);
+            }
+
+        }
+        transform.DOMove(transform.position + dir, speed).OnComplete(AfterStep);
+        walk = false;
+
+    }
+    protected virtual void AfterStep()
+    {
+        obf.UpdateTargetPosition(moveDirection);
+        moveIsComplete = true;
+        isMoving = false;
+        walk = true;
+    }
+
+    void RotateMeRight()
+    {
+        yAngle = (yAngle + 90) % 360;
+        transform.rotation = Quaternion.Euler(0, yAngle, 0);
+        moveDirection = transform.forward;
+    }
+
+    void checkEnemies()
+    {
+        RaycastHit hit;
+        bool enemyInFront = Physics.Raycast(transform.position, moveDirection, out hit, 1.2f, EnemyLayer);
+        if (enemyInFront)
+        {
+            Destroy(hit.transform.gameObject);
+        }
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawSphere(obf.targetMovementPos, .1f);
     }
+
+    /// <summary>
+    /// OnCollisionEnter is called when this collider/rigidbody has begun
+    /// touching another rigidbody/collider.
+    /// </summary>
+    /// <param name="other">The Collision data associated with this collision.</param>
+
 }
