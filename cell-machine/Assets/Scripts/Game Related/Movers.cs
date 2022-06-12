@@ -1,5 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
+using System;
+using System.Collections.Generic;
 
 public class Movers : MonoBehaviour
 {
@@ -19,15 +21,16 @@ public class Movers : MonoBehaviour
     public bool walk = true;
     public LayerMask layerMask;
     public LayerMask EnemyLayer;
+    public GameObject ExplosionEffect;
 
     //Local Vars
     public ObjFollowMouse obf;
-    bool moveIsComplete = false;
+    protected bool moveIsComplete = false;
     protected bool isMoving;
     public Vector3 moveDirection;
-    bool inFront;
+    protected bool inFront;
     public float yAngle = 0;
-    Movers objToMove;
+    protected Movers objToMove;
 
 
 
@@ -76,7 +79,6 @@ public class Movers : MonoBehaviour
                 case boxType.ROTATION:
                     if (MyType == boxType.PLAYER)
                     {
-                        print("OEEEE");
                         RotateMeRight();
                         objToMove = null;
                     }
@@ -87,7 +89,7 @@ public class Movers : MonoBehaviour
         }
     }
 
-    public void Move()
+    public virtual void Move()
     {
         if (!moveIsComplete || iAmStander || !walk) { return; }
         isMoving = true;
@@ -105,7 +107,7 @@ public class Movers : MonoBehaviour
         moveIsComplete = false;
 
     }
-    void MoveTo(Vector3 dir)
+    public void MoveTo(Vector3 dir)
     {
         if (!walk) { return; }
         isMoving = true;
@@ -130,7 +132,7 @@ public class Movers : MonoBehaviour
         walk = true;
     }
 
-    void RotateMeRight()
+    protected void RotateMeRight()
     {
         yAngle = (yAngle + 90) % 360;
         transform.rotation = Quaternion.Euler(0, yAngle, 0);
@@ -158,4 +160,10 @@ public class Movers : MonoBehaviour
     /// </summary>
     /// <param name="other">The Collision data associated with this collision.</param>
 
+    public void Explode()
+    {
+        transform.DOKill();
+        Instantiate(ExplosionEffect, transform.position, Quaternion.identity);
+        Destroy(this.gameObject);
+    }
 }

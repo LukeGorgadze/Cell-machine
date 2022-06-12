@@ -90,6 +90,7 @@ public class PlaceObjectOnGrid : MonoBehaviour
                     {
                         return;
                     }
+                    else if(currentDraggableObject.transform.position.x > width || currentDraggableObject.transform.position.z < 0) return;
                     currentDraggableObject.isChosen = true;
                     if (currentDraggableObject.nodeITook != null)
                         currentDraggableObject.nodeITook.isPlaceable = true;
