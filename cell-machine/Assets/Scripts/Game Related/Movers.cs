@@ -139,7 +139,7 @@ public class Movers : MonoBehaviour
         moveDirection = transform.forward;
     }
 
-    void checkEnemies()
+    protected void checkEnemies()
     {
         RaycastHit hit;
         bool enemyInFront = Physics.Raycast(transform.position, moveDirection, out hit, 1.2f, EnemyLayer);

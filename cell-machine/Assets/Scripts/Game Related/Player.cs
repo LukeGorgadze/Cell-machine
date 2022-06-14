@@ -7,6 +7,8 @@ using DG.Tweening;
 
 public class Player : Movers
 {
+    public Transform myBat;
+    public bool hasBat = false;
     public Animator anim;
 
     //Locals
@@ -15,6 +17,23 @@ public class Player : Movers
     public bool ContinuousRun;
     // delegate void HitTheFuckingTarget();
     // HitTheFuckingTarget hitTheFuckingTarget;
+
+    protected override void MyUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            walk = true;
+            if (!iAmStander)
+            {
+                moveIsComplete = true;
+            }
+        }
+        Move();
+
+
+        CheckTheFront();
+        checkEnemies();
+    }
 
     public override void CheckTheFront()
     {
@@ -36,7 +55,8 @@ public class Player : Movers
                     }
                     break;
                 case boxType.EXPLODER:
-                    HitTheTarget();
+                    if(hasBat)
+                        HitTheTarget();
                     break;
                 default:
                     break;
@@ -46,7 +66,7 @@ public class Player : Movers
 
     public override void Move()
     {
-        if (!moveIsComplete || iAmStander || !walk) { return; }
+        if (!moveIsComplete || iAmStander) { return; }
         isMoving = true;
         if (!ContinuousRun)
             anim.SetTrigger("Running");
@@ -112,6 +132,7 @@ public class Player : Movers
         oneHit = true;
         isCoroutineExecuting = false;
         resetAllTriggers();
+        anim.SetTrigger("Running");
         if (objToMove != null)
             objToMove.Explode();
     }
@@ -127,5 +148,19 @@ public class Player : Movers
     void runAnim()
     {
         anim.SetTrigger("Running");
+    }
+
+    /// <summary>
+    /// OnTriggerEnter is called when the Collider other enters the trigger.
+    /// </summary>
+    /// <param name="other">The other Collider involved in this collision.</param>
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag.Equals("Bat"))
+        {
+            hasBat = true;
+            myBat.gameObject.SetActive(true);
+            Destroy(other.gameObject);
+        }
     }
 }
