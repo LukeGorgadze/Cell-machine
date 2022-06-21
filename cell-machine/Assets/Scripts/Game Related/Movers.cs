@@ -9,7 +9,8 @@ public class Movers : MonoBehaviour
     public enum boxType
     {
         PLAYER,
-        ROTATION,
+        ROTATIONL,
+        ROTATIONR,
         PAUSE,
         EXPLODER,
 
@@ -76,10 +77,17 @@ public class Movers : MonoBehaviour
                 objToMove.moveDirection = this.moveDirection;
             switch (objToMove.MyType)
             {
-                case boxType.ROTATION:
+                case boxType.ROTATIONR:
                     if (MyType == boxType.PLAYER)
                     {
-                        RotateMeRight();
+                        RotateMe(90f);
+                        objToMove = null;
+                    }
+                    break;
+                case boxType.ROTATIONL:
+                    if (MyType == boxType.PLAYER)
+                    {
+                        RotateMe(-90f);
                         objToMove = null;
                     }
                     break;
@@ -132,10 +140,10 @@ public class Movers : MonoBehaviour
         walk = true;
     }
 
-    protected void RotateMeRight()
+    protected void RotateMe(float ang)
     {
-        yAngle = (yAngle + 90) % 360;
-        transform.rotation = Quaternion.Euler(0, yAngle, 0);
+        // yAngle = (yAngle + ang);
+        transform.rotation = Quaternion.Euler(0, ang, 0);
         moveDirection = transform.forward;
     }
 

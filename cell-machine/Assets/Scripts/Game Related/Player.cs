@@ -47,10 +47,17 @@ public class Player : Movers
                 objToMove.moveDirection = this.moveDirection;
             switch (objToMove.MyType)
             {
-                case boxType.ROTATION:
+                case boxType.ROTATIONR:
                     if (MyType == boxType.PLAYER)
                     {
-                        RotateMeRight();
+                        RotateMe(90f);
+                        objToMove = null;
+                    }
+                    break;
+                case boxType.ROTATIONL:
+                    if (MyType == boxType.PLAYER)
+                    {
+                        RotateMe(180f);
                         objToMove = null;
                     }
                     break;
